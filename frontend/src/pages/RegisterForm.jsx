@@ -27,6 +27,7 @@ const RegisterForm = () => {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    getValues,
   } = useForm();
 
   const navigate = useNavigate();
@@ -44,7 +45,6 @@ const RegisterForm = () => {
   }, [userInfo, navigate]);
 
   async function onSubmit(values) {
-    console.log(values);
     try {
       const res = await signup({
         email: values.email,
@@ -141,7 +141,7 @@ const RegisterForm = () => {
                 {...register("confirmPassword", {
                   required: "This is required",
                   validate: (value) =>
-                    value === "password" || "Passwords do not match", // Validation logic
+                    value === getValues("password") || "Passwords do not match", // Validation logic
                 })}
               />
               <FormErrorMessage>
