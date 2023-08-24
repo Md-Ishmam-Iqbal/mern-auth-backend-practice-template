@@ -37,15 +37,15 @@ The frontend app should run without any issues. I used redux in the frontend for
 
 The following are the routes I used. If you want the frontend to work seamlessly, ensure that you're using these routes.
 
-#### POST: `http://localhost:8000/api/users/auth`
+#### Login POST: `http://localhost:8000/api/users/auth`
 
-#### POST: `http://localhost:8000/api/users`
+#### Register POST: `http://localhost:8000/api/users`
 
-#### POST: `http://localhost:8000/api/users/logout`
+#### Logout POST: `http://localhost:8000/api/users/logout`
 
-#### PUT: `http://localhost:8000/api/users/profile`
+#### Update Profile PUT: `http://localhost:8000/api/users/profile`
 
-#### GET: `http://localhost:8000/api/users/profile`
+#### Get Profile GET: `http://localhost:8000/api/users/profile`
 
 ## Main functionalities and guidelines
 
@@ -55,5 +55,7 @@ The following are the routes I used. If you want the frontend to work seamlessly
 - All the requests must send a response(res.json) in the format `{ id ,name, email }`
 
 - You will need to setup your own database (preferably MongoDB) with appropriate model. Here is a [link](https://github.com/Md-Ishmam-Iqbal/mern-auth-practice/tree/main/backend/models) to my models. You can also refer back to the tutorial linked earlier.
+
+- Make sure to go through the frontend site before implementing. The update profile form is the same as the register form without the confirm password field.
 
 _Bonus_: Add a blacklist collection in your database which inputs tokens into the database whenever a user logs out. And there should be a middleware which checks for the blacklisted tokens. If the current token matches the blacklisted token, the user will not be allowed to login and will be unable to navigate to the protected routes.

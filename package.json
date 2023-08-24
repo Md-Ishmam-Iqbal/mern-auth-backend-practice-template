@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "This is my mern-auth frontend template for backend",
   "main": "index.js",
-    "scripts": {
-    "start": "",
-    "server": "",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
     "client": "npm run dev --prefix frontend",
     "dev": ""
   },
