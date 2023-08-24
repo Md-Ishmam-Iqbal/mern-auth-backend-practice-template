@@ -1,4 +1,11 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
+
+import { useToast } from "@chakra-ui/react";
+
+import { useSignupMutation } from "../slices/usersApiSlice";
+import { setCredentials } from "../slices/authSlice";
 
 import {
   Button,
@@ -11,29 +18,22 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
-
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 
-import { useLoginMutation } from "../slices/usersApiSlice";
-import { setCredentials } from "../slices/authSlice";
-
-import { useToast } from "@chakra-ui/react";
-
-const LoginForm = () => {
+const RegisterForm = () => {
   const chakraToast = useToast();
 
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    getValues,
   } = useForm();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [login, { isLoading, error }] = useLoginMutation();
+  const [signup, { isLoading, error }] = useSignupMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -45,10 +45,10 @@ const LoginForm = () => {
   }, [userInfo, navigate]);
 
   async function onSubmit(values) {
-    console.log(values);
     try {
-      const res = await login({
+      const res = await signup({
         email: values.email,
+        name: values.name,
         password: values.password,
       }).unwrap();
       dispatch(setCredentials({ ...res }));
@@ -71,11 +71,28 @@ const LoginForm = () => {
       <Card w="2xl" variant="outline" px="40" py="20" boxShadow="lg">
         <Center>
           <Heading pb={8} textTransform="uppercase" fontWeight={"medium"}>
-            Sign In
+            Sign Up
           </Heading>
         </Center>
         <form onSubmit={handleSubmit(onSubmit)}>
           <VStack spacing={6}>
+            <FormControl isInvalid={errors.name}>
+              <FormLabel htmlFor="name">Name</FormLabel>
+              <Input
+                id="name"
+                placeholder="John Doe"
+                {...register("name", {
+                  required: "This is required",
+                  minLength: {
+                    value: 4,
+                    message: "Minimum length should be 4",
+                  },
+                })}
+              />
+              <FormErrorMessage>
+                {errors.name && errors.name.message}
+              </FormErrorMessage>
+            </FormControl>
             <FormControl isInvalid={errors.email}>
               <FormLabel htmlFor="email">Email</FormLabel>
               <Input
@@ -115,6 +132,22 @@ const LoginForm = () => {
                 {errors.password && errors.password.message}
               </FormErrorMessage>
             </FormControl>
+            <FormControl isInvalid={errors.confirmPassword}>
+              <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+              <Input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                {...register("confirmPassword", {
+                  required: "This is required",
+                  validate: (value) =>
+                    value === getValues("password") || "Passwords do not match", // Validation logic
+                })}
+              />
+              <FormErrorMessage>
+                {errors.confirmPassword && errors.confirmPassword.message}
+              </FormErrorMessage>
+            </FormControl>
             <Center>
               <Button
                 mt={12}
@@ -126,7 +159,7 @@ const LoginForm = () => {
                 fontSize={"lg"}
                 textTransform="uppercase"
               >
-                Sign In
+                Sign Up
               </Button>
             </Center>
           </VStack>
@@ -136,4 +169,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
